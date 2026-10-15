@@ -1,0 +1,68 @@
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      CORE_DB_PASSWORD: ${CORE_DB_PASSWORD}
+      TX_DB_PASSWORD: ${TX_DB_PASSWORD}
+      FRAUD_DB_PASSWORD: ${FRAUD_DB_PASSWORD}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./infra/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  rabbitmq:
+    image: rabbitmq:4-management
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    ports:
+      - "${RABBITMQ_PORT:-5672}:5672"
+      - "${RABBITMQ_UI_PORT:-15672}:15672"
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.7
+    command: start-dev --import-realm
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KC_HTTP_PORT: 8180
+      KC_HOSTNAME: http://keycloak:8180
+      KC_HEALTH_ENABLED: "true"
+      # Sustituidas dentro de realm-fintech.json al importar
+      KC_USER1_PASSWORD: ${KC_USER1_PASSWORD}
+      KC_USER2_PASSWORD: ${KC_USER2_PASSWORD}
+      KC_ADMIN_USER_PASSWORD: ${KC_ADMIN_USER_PASSWORD}
+    ports:
+      - "${KEYCLOAK_PORT:-8180}:8180"
+    volumes:
+      - keycloak-data:/opt/keycloak/data
+      - ./infra/keycloak/realm-fintech.json:/opt/keycloak/data/import/realm-fintech.json:ro
+    healthcheck:
+      # La imagen no trae curl: se consulta /health/ready (puerto de management 9000) con /dev/tcp
+      test:
+        - "CMD-SHELL"
+        - "exec 3<>/dev/tcp/localhost/9000 && printf 'GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3 && grep -q '\"status\": \"UP\"' <&3"
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 40s
+
+volumes:
+  postgres-data:
+  rabbitmq-data:
+  keycloak-data:

@@ -1,0 +1,13 @@
+# Secretos y entorno local
+.env
+
+# Build
+target/
+dist/
+node_modules/
+*.log
+
+# IDE
+.idea/
+*.iml
+.vscode/

@@ -1,0 +1,91 @@
+{
+  "realm": "fintech",
+  "enabled": true,
+  "displayName": "Fintech Wallet",
+  "sslRequired": "none",
+  "registrationAllowed": true,
+  "registrationEmailAsUsername": false,
+  "verifyEmail": false,
+  "loginWithEmailAllowed": true,
+  "resetPasswordAllowed": true,
+  "internationalizationEnabled": true,
+  "supportedLocales": ["es", "en"],
+  "defaultLocale": "es",
+  "accessTokenLifespan": 300,
+  "ssoSessionIdleTimeout": 1800,
+  "ssoSessionMaxLifespan": 36000,
+  "defaultRole": {
+    "name": "default-roles-fintech",
+    "description": "Rol por defecto del realm",
+    "composite": true,
+    "composites": { "realm": ["USER"] }
+  },
+  "roles": {
+    "realm": [
+      { "name": "USER", "description": "Usuario de la billetera" },
+      { "name": "ADMIN", "description": "Administrador" }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "wallet-frontend",
+      "name": "Wallet Frontend",
+      "enabled": true,
+      "publicClient": true,
+      "protocol": "openid-connect",
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "redirectUris": ["http://localhost:5173/*"],
+      "webOrigins": ["http://localhost:5173"],
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "http://localhost:5173/*"
+      }
+    },
+    {
+      "clientId": "dev-tools",
+      "name": "Dev tools (SOLO DESARROLLO, eliminar antes del deploy)",
+      "enabled": true,
+      "publicClient": true,
+      "protocol": "openid-connect",
+      "standardFlowEnabled": false,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": false
+    }
+  ],
+  "users": [
+    {
+      "username": "user1",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "user1@fintech.local",
+      "firstName": "User",
+      "lastName": "Uno",
+      "credentials": [{ "type": "password", "value": "${KC_USER1_PASSWORD}", "temporary": false }],
+      "realmRoles": ["USER"]
+    },
+    {
+      "username": "user2",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "user2@fintech.local",
+      "firstName": "User",
+      "lastName": "Dos",
+      "credentials": [{ "type": "password", "value": "${KC_USER2_PASSWORD}", "temporary": false }],
+      "realmRoles": ["USER"]
+    },
+    {
+      "username": "admin",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "admin@fintech.local",
+      "firstName": "Admin",
+      "lastName": "Fintech",
+      "credentials": [{ "type": "password", "value": "${KC_ADMIN_USER_PASSWORD}", "temporary": false }],
+      "realmRoles": ["USER", "ADMIN"]
+    }
+  ]
+}
