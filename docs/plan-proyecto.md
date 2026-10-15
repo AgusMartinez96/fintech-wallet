@@ -1,5 +1,7 @@
 # Fintech: Pasarela de Pagos y Billetera Virtual — Plan del proyecto
 
+> Documento original. Ante cualquier diferencia, prevalecen los archivos 01 a 07 de docs/.
+
 Oct 14, 2026 · @Agustin
 
 ## Resumen y objetivos
