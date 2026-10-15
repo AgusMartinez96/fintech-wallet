@@ -57,4 +57,9 @@ URLs locales: gateway `http://localhost:8080` · Keycloak `http://keycloak:8180`
 ## Al trabajar en una fase
 1. Releé la fase en `docs/06` y los criterios en `docs/07`; escribí primero los tests de lo crítico.
 2. Implementá solo lo de esa fase; dejá el proyecto compilando y con tests en verde.
-3. Verificá el criterio de "terminado" (incluida la conciliación `ok` cuando haya dinero) y recién ahí commiteá.
+3. Verificá el criterio de "terminado" (incluida la conciliación `ok` cuando haya dinero) y recién ahí mostrame los comandos de commit (ver Git y commits).
+
+## Git y commits
+- **No hagas commits ni push.** Los commits los hago yo a mano.
+- Al terminar cada fase, mostrame los comandos de git que tengo que correr: `git add` y un mensaje de commit sugerido en formato `tipo: descripción` (en inglés, ej. `feat: add account ledger`).
+- Si en la fase se generó un servicio nuevo con Spring Initializr, incluí en esos comandos: `git add --chmod=+x <servicio>/mvnw`.
