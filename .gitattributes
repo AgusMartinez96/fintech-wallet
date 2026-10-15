@@ -1,0 +1,12 @@
+# Todo en LF por defecto (lo que corre en contenedores Linux)
+* text=auto eol=lf
+
+# Scripts de Windows necesitan CRLF
+*.cmd text eol=crlf
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+
+# Binarios: no tocar
+*.png binary
+*.jpg binary
+*.jar binary
