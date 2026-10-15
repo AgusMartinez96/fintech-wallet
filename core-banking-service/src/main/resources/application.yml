@@ -1,0 +1,31 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: core-banking-service
+  datasource:
+    url: ${CORE_DB_URL:jdbc:postgresql://localhost:5432/core_db}
+    username: ${CORE_DB_USER:core_user}
+    password: ${CORE_DB_PASSWORD}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+
+management:
+  health:
+    # Fase 1 no usa RabbitMQ: sin esto /actuator/health reportaría DOWN. Se quita en la Fase 3.
+    rabbit:
+      enabled: false
+
+app:
+  crypto:
+    # 32 bytes en base64. Sin valor por defecto: nunca en el repo.
+    key: ${APP_CRYPTO_KEY}
+  deposit:
+    demo-max: 50000
+    demo-balance-cap: 200000
+    admin-max: 1000000
